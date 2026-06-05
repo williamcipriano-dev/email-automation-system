@@ -2,6 +2,7 @@ from datetime import datetime
 from imap_tools import MailBox
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 EMAIL_USER = os.getenv("EMAIL_USER")
@@ -31,23 +32,44 @@ def read_emails():
                     sender = msg.from_.lower()
                     subject = msg.subject.lower()
 
+                    # FILTROS INTELIGENTES
+
                     if "indeed" in sender:
                         category = "Oportunidade de Trabalho"
 
-                    elif "pinterest" in sender:
-                        category = "Promocional"
+                    elif "glassdoor" in sender:
+                        category = "Vagas de Emprego"
+
+                    elif "infojobs" in sender:
+                        category = "Vagas de Emprego"
+
+                    elif "linkedin" in sender:
+                        category = "Networking"
 
                     elif "hashtag" in sender:
                         category = "Estudos"
 
+                    elif "pinterest" in sender:
+                        category = "Promocional"
+
+                    elif "mercado" in sender:
+                        category = "Financeiro"
+
+                    elif "panini" in sender:
+                        category = "Compras"
+
                     elif "vaga" in subject:
                         category = "Possível Vaga"
+
+                    # EXIBIÇÃO NO TERMINAL
 
                     print(f"Categoria: {category}")
                     print(f"Remetente: {msg.from_}")
                     print(f"Assunto: {msg.subject}")
                     print(f"Data: {msg.date}")
                     print("-" * 50)
+
+                    # SALVAR LOGS
 
                     log_file.write(
                         f"\n[{datetime.now()}]\n"
