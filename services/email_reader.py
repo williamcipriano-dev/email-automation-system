@@ -1,7 +1,7 @@
+from datetime import datetime
 from imap_tools import MailBox
 from dotenv import load_dotenv
 import os
-
 load_dotenv()
 
 EMAIL_USER = os.getenv("EMAIL_USER")
@@ -18,30 +18,60 @@ def read_emails():
 
             print("\nEmails encontrados:\n")
 
-            for msg in mailbox.fetch(limit=10, reverse=True):
+            with open(
+                "logs/email_logs.txt",
+                "a",
+                encoding="utf-8"
+            ) as log_file:
 
-                category = "Outros"
+                for msg in mailbox.fetch(limit=10, reverse=True):
 
-                sender = msg.from_.lower()
-                subject = msg.subject.lower()
+                    category = "Outros"
 
-                if "indeed" in sender:
-                    category = "Oportunidade de Trabalho"
+                    sender = msg.from_.lower()
+                    subject = msg.subject.lower()
 
-                elif "pinterest" in sender:
-                    category = "Promocional"
+                    if "indeed" in sender:
+                        category = "Oportunidade de Trabalho"
 
-                elif "hashtag" in sender:
-                    category = "Estudos"
+                    elif "pinterest" in sender:
+                        category = "Promocional"
 
-                elif "vaga" in subject:
-                    category = "Possível Vaga"
+                    elif "hashtag" in sender:
+                        category = "Estudos"
 
-                print(f"Categoria: {category}")
-                print(f"Remetente: {msg.from_}")
-                print(f"Assunto: {msg.subject}")
-                print(f"Data: {msg.date}")
-                print("-" * 50)
+                    elif "vaga" in subject:
+                        category = "Possível Vaga"
+
+                    print(f"Categoria: {category}")
+                    print(f"Remetente: {msg.from_}")
+                    print(f"Assunto: {msg.subject}")
+                    print(f"Data: {msg.date}")
+                    print("-" * 50)
+
+                    log_file.write(
+                        f"\n[{datetime.now()}]\n"
+                    )
+
+                    log_file.write(
+                        f"Categoria: {category}\n"
+                    )
+
+                    log_file.write(
+                        f"Remetente: {msg.from_}\n"
+                    )
+
+                    log_file.write(
+                        f"Assunto: {msg.subject}\n"
+                    )
+
+                    log_file.write(
+                        f"Data: {msg.date}\n"
+                    )
+
+                    log_file.write(
+                        "-" * 50 + "\n"
+                    )
 
     except Exception as error:
         print(f"Erro ao ler emails: {error}")
