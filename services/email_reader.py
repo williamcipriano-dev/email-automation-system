@@ -32,6 +32,26 @@ def read_emails():
                     sender = msg.from_.lower()
                     subject = msg.subject.lower()
 
+                                        # VERIFICAR ANEXOS
+
+                    if msg.attachments:
+
+                        for attachment in msg.attachments:
+
+                            file_path = (
+                                f"attachments/{attachment.filename}"
+                            )
+
+                            with open(file_path, "wb") as file:
+
+                                file.write(
+                                    attachment.payload
+                                )
+
+                            print(
+                                f"Anexo salvo: {attachment.filename}"
+                            )
+
                     # FILTROS INTELIGENTES
 
                     if "indeed" in sender:
